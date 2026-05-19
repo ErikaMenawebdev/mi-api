@@ -4,7 +4,7 @@ const auth = require("../middlewares/auth");
 
 const Tarea = require("../models/tarea");
 
-router.get("/tareas", auth, async (req, res) => {
+router.get("/tareas", auth, async (req, res, next) => {
   try {
 
     const tareas = await Tarea.find({
@@ -14,15 +14,12 @@ router.get("/tareas", auth, async (req, res) => {
     res.json(tareas);
 
   } catch (error) {
-
-    res.status(500).json({
-      mensaje: "Error al obtener tareas"
-    });
-
-  }
+  next(error);
+}
+  
 });
 
-router.get("/tareas/:id", async (req, res) => {
+router.get("/tareas/:id", async (req, res, next) => {
     try{
         const tarea = await Tarea.findById(req.params.id)
         if (!tarea) {
@@ -32,8 +29,9 @@ router.get("/tareas/:id", async (req, res) => {
     res.json(tarea);
 
   } catch (error) {
-    res.status(500).json({ mensaje: "Error al obtener la tarea" });
-  }
+  next(error);
+}
+  
 
 });
 
@@ -158,7 +156,7 @@ router.put("/tareas/:id", async (req, res) => {
   }
 });
 
-router.delete("/tareas/:id", async (req, res) => {
+router.delete("/tareas/:id", async (req, res, next) => {
   try {
 
     const tareaEliminada = await Tarea.findByIdAndDelete(
@@ -176,12 +174,10 @@ router.delete("/tareas/:id", async (req, res) => {
     });
 
   } catch (error) {
+  next(error);
+}
 
-    res.status(500).json({
-      mensaje: "Error en el servidor"
-    });
-
-  }
+  
 });
 
 module.exports = router;
