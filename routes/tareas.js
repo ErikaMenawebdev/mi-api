@@ -39,7 +39,7 @@ router.get("/tareas/:id", auth, async (req, res, next) => {
 
 });
 
-router.put("/tareas/:id", auth, async (req, res) => {
+router.put("/tareas/:id", auth, async (req, res, next) => {
 
   try {
 
@@ -67,17 +67,17 @@ router.put("/tareas/:id", auth, async (req, res) => {
 
     res.json(tarea);
 
-  } catch (error) {
+  }  catch (error) {
 
-    res.status(500).json({
-      mensaje: "Error al actualizar tarea"
-    });
+  next(error);
 
-  }
+}
+
+  
 
 });
 
-router.delete("/tareas/:id", auth, async (req, res) => {
+router.delete("/tareas/:id", auth, async (req, res, next) => {
 
   try {
 
@@ -103,15 +103,13 @@ router.delete("/tareas/:id", auth, async (req, res) => {
 
   } catch (error) {
 
-    res.status(500).json({
-      mensaje: "Error al eliminar tarea"
-    });
+  next(error);
 
-  }
+}
 
 });
 
-router.post("/tareas", auth, async (req, res) => {
+router.post("/tareas", auth, async (req, res, next) => {
   try {
 
     if (!req.body.titulo) {
@@ -130,13 +128,13 @@ router.post("/tareas", auth, async (req, res) => {
     res.json(nuevaTarea);
 
   } catch (error) {
-    res.status(500).json({
-      mensaje: "Error al crear tarea"
-    });
-  }
+
+  next(error);
+
+}
 });
 
-router.put("/tareas/:id", async (req, res) => {
+router.put("/tareas/:id", async (req, res, next) => {
   try {
 
     const tareaActualizada = await Tarea.findByIdAndUpdate(
@@ -154,10 +152,10 @@ router.put("/tareas/:id", async (req, res) => {
     res.json(tareaActualizada);
 
   } catch (error) {
-    res.status(500).json({
-      mensaje: "Error en el servidor"
-    });
-  }
+
+  next(error);
+
+}
 });
 
 router.delete("/tareas/:id", async (req, res, next) => {
@@ -178,7 +176,9 @@ router.delete("/tareas/:id", async (req, res, next) => {
     });
 
   } catch (error) {
+
   next(error);
+
 }
 
   
