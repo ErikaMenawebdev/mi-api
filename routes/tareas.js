@@ -14,12 +14,14 @@ router.get("/tareas", auth, async (req, res, next) => {
     res.json(tareas);
 
   } catch (error) {
+
   next(error);
+
 }
   
 });
 
-router.get("/tareas/:id", async (req, res, next) => {
+router.get("/tareas/:id", auth, async (req, res, next) => {
     try{
         const tarea = await Tarea.findById(req.params.id)
         if (!tarea) {
@@ -29,7 +31,9 @@ router.get("/tareas/:id", async (req, res, next) => {
     res.json(tarea);
 
   } catch (error) {
+
   next(error);
+
 }
   
 
