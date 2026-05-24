@@ -120,6 +120,7 @@ router.post("/tareas", auth, async (req, res, next) => {
 
     const nuevaTarea = new Tarea({
   titulo: req.body.titulo,
+  completada: req.body.completada,
   usuario: req.usuario.id
 });
 
