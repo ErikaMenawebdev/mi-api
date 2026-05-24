@@ -157,8 +157,13 @@ router.put("/tareas/:id", auth, async (req, res, next) => {
     }
 
     // Actualizar tarea
-    tarea.completada = req.body.completada;
+    if (req.body.titulo !== undefined) {
+  tarea.titulo = req.body.titulo;
+}
 
+if (req.body.completada !== undefined) {
+  tarea.completada = req.body.completada;
+}
     // Guardar cambios
     await tarea.save();
 
