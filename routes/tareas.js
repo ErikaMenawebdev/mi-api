@@ -135,54 +135,42 @@ router.post("/tareas", auth, async (req, res, next) => {
 }
 });
 
-router.put("/tareas/:id", async (req, res, next) => {
+router.put("/tareas/:id", auth, async (req, res, next) => {
+
   try {
 
-    const tareaActualizada = await Tarea.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    // Buscar tarea por ID
+    const tarea = await Tarea.findById(req.params.id);
 
-    if (!tareaActualizada) {
+    // Verificar si existe
+    if (!tarea) {
       return res.status(404).json({
         mensaje: "Tarea no encontrada"
       });
     }
 
-    res.json(tareaActualizada);
-
-  } catch (error) {
-
-  next(error);
-
-}
-});
-
-router.delete("/tareas/:id", async (req, res, next) => {
-  try {
-
-    const tareaEliminada = await Tarea.findByIdAndDelete(
-      req.params.id
-    );
-
-    if (!tareaEliminada) {
-      return res.status(404).json({
-        mensaje: "Tarea no encontrada"
+    // Verificar propietario
+    if (tarea.usuario.toString() !== req.usuario.id) {
+      return res.status(403).json({
+        mensaje: "No autorizado"
       });
     }
 
-    res.json({
-      mensaje: "Tarea eliminada correctamente"
-    });
+    // Actualizar tarea
+    tarea.completada = req.body.completada;
+
+    // Guardar cambios
+    await tarea.save();
+
+    // Respuesta
+    res.json(tarea);
 
   } catch (error) {
 
-  next(error);
+    next(error);
 
-}
+  }
 
-  
 });
 
 module.exports = router;
